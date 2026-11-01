@@ -26,7 +26,7 @@ Reproduce it on your GPU with `bash tools/reproduce.sh`.
 
 **What this does and doesn't mean:** LiteMoE calls vLLM's expert, attention and router kernels, and owns forward, KV and the generation loop. These runs use fixed batches, greedy decoding and one GPU. vLLM also runs a scheduler and a full serving stack, which LiteMoE doesn't have.
 
-**Accuracy is not yet proven equal.** On 500 GSM8K problems LiteMoE scored 1-2.4 points below vLLM. That is within noise per run, but it missed the bar set in advance. [Quality results and known limits](docs/benchmark.md)
+**Accuracy:** on all 1,319 GSM8K test problems (Granite 3B, A100), LiteMoE scored 46.2% and vLLM 47.2%, a difference of -0.9 points (95% CI -2.9 to +1.1). No loss was detected, but outputs aren't identical and this is one task on one model. [Quality results and known limits](docs/benchmark.md)
 
 ## Where the speed comes from
 

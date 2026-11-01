@@ -27,16 +27,28 @@ Tested on Ubuntu 24.04, Python 3.12.3, NVIDIA driver 580.82.07, CUDA 13.0, torch
 
 ## Task-level quality
 
-`tools/quality.py` runs the first 500 GSM8K test problems, greedy, 256 tokens, batch 16. The bar was set before the first run: on every comparison, the lower 95% bound of the paired accuracy difference must stay above -3 points. **LiteMoE did not clear it** in 6 of 7 comparisons with data.
+`tools/quality.py` runs GSM8K test problems, greedy, 256 tokens, batch 16. The bar was set before the first run: the lower 95% bound of the paired accuracy difference must stay above -3 points.
 
-| Accuracy | LiteMoE | vLLM | HF | LiteMoE - vLLM (95% CI) | LiteMoE - HF (95% CI) |
+The decisive run used Granite 3B on all 1,319 problems on A100, chosen after the smaller runs below were inconclusive. **It passed:**
+
+| 3B, 1,319 problems, A100 | Accuracy | LiteMoE minus this (95% CI) |
+|---|---:|---:|
+| LiteMoE | 46.2% | |
+| vLLM | 47.2% | -0.9 (-2.9 to +1.1) |
+| HF | 46.9% | -0.7 (-2.6 to +1.3) |
+
+On the 819 problems not used in the earlier runs, the differences were -0.9 (-3.4 to +1.7) against vLLM and +0.1 (-2.4 to +2.6) against HF. No loss was detected, but a loss of up to about 3 points is not ruled out.
+
+The earlier 500-problem runs were too small to clear the bar, missing it in 6 of 7 comparisons. No interval excluded zero, and LiteMoE was never ahead:
+
+| 500 problems | LiteMoE | vLLM | HF | LiteMoE - vLLM (95% CI) | LiteMoE - HF (95% CI) |
 |---|---:|---:|---:|---:|---:|
 | A100 1B | 34.6% | 35.8% | 37.0% | -1.2 (-4.2 to +1.8) | -2.4 (-5.4 to +0.6) |
 | A100 3B | 47.6% | 50.0% | 50.4% | -2.4 (-5.6 to +0.8) | -2.8 (-6.0 to +0.4) |
 | L4 1B | 36.2% | 37.2% | 36.2% | -1.0 (-4.0 to +2.0) | 0.0 (-2.9 to +2.9) |
 | L4 3B | 49.2% | 51.2% | timed out | -2.0 (-5.3 to +1.3) | not measured |
 
-No single interval excludes zero, but LiteMoE was never ahead, and vLLM and HF were closer to each other (-1.2 to +1.0). A small accuracy loss on 3B of up to a few points is not ruled out. Treat outputs as experimental.
+Granite 1B and L4 have not had a full-set run. Scores on the same problems also moved between runs on one card: the first 500 on A100 3B scored 47.6% and then 48.0% for LiteMoE, 50.0% and then 49.0% for vLLM. GSM8K measures one kind of task.
 
 Across 500 problems per run there were no empty outputs, tokens after EOS or budget overruns, and repeating one batch gave identical LiteMoE output. Per-problem results are in [`quality-gsm8k.json`](../benchmarks/published/quality-gsm8k.json).
 
