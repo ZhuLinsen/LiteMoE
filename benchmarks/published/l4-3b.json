@@ -1,0 +1,219 @@
+{
+  "protocol": "matched-offline-v1",
+  "input_sha256": "87b975393b2ad53b402c3f93ac2d40e5963d2e446633b2640e8a7a5cbc2dce0f",
+  "smoke": false,
+  "rows": [
+    {
+      "profile": "b1-p128",
+      "mini_tps": 114.3609107709909,
+      "vllm_tps": 111.86221177703098,
+      "mini_over_vllm": 1.0223372929451855,
+      "first_repeat_exact_requests": 1,
+      "requests": 1,
+      "repeat_stable": {
+        "mini": true,
+        "vllm": true
+      }
+    },
+    {
+      "profile": "b8-p128",
+      "mini_tps": 495.43366292122886,
+      "vllm_tps": 447.63434115956073,
+      "mini_over_vllm": 1.106782070468159,
+      "first_repeat_exact_requests": 8,
+      "requests": 8,
+      "repeat_stable": {
+        "mini": true,
+        "vllm": true
+      }
+    },
+    {
+      "profile": "b32-p128",
+      "mini_tps": 1643.7838497373082,
+      "vllm_tps": 1478.0554736686174,
+      "mini_over_vllm": 1.1121259513063766,
+      "first_repeat_exact_requests": 32,
+      "requests": 32,
+      "repeat_stable": {
+        "mini": true,
+        "vllm": true
+      }
+    },
+    {
+      "profile": "b1-p2048",
+      "mini_tps": 97.833560714462,
+      "vllm_tps": 98.86571992883,
+      "mini_over_vllm": 0.9895599888908813,
+      "first_repeat_exact_requests": 1,
+      "requests": 1,
+      "repeat_stable": {
+        "mini": true,
+        "vllm": true
+      }
+    },
+    {
+      "profile": "b8-p1024",
+      "mini_tps": 383.7035456524683,
+      "vllm_tps": 359.86226101865947,
+      "mini_over_vllm": 1.0662511388838647,
+      "first_repeat_exact_requests": 8,
+      "requests": 8,
+      "repeat_stable": {
+        "mini": true,
+        "vllm": true
+      }
+    },
+    {
+      "profile": "mixed-b8",
+      "mini_tps": 347.5056732693584,
+      "vllm_tps": 345.98827316943573,
+      "mini_over_vllm": 1.0043856980643375,
+      "first_repeat_exact_requests": 6,
+      "requests": 8,
+      "repeat_stable": {
+        "mini": true,
+        "vllm": false
+      }
+    }
+  ],
+  "geometric_mean_ratio": 1.0491447412089898,
+  "environments": {
+    "mini": {
+      "protocol": "matched-offline-v1",
+      "framework": "mini",
+      "input_sha256": "87b975393b2ad53b402c3f93ac2d40e5963d2e446633b2640e8a7a5cbc2dce0f",
+      "model": "ibm-granite/granite-3.1-3b-a800m-instruct",
+      "revision": "a02780686e08a03fe0d2679a293b5c74a90efa89",
+      "scope": "pretokenized submission through output collection and one final decode per request",
+      "profiles": [
+        "b1-p128",
+        "b8-p128",
+        "b32-p128",
+        "b1-p2048",
+        "b8-p1024",
+        "mixed-b8"
+      ],
+      "smoke": false,
+      "repeats": 5,
+      "warmup": 3,
+      "sampling": {
+        "temperature": 0,
+        "ignore_eos": true,
+        "max_tokens": 128
+      },
+      "detokenization": {
+        "skip_special_tokens": false,
+        "clean_up_tokenization_spaces": false,
+        "calls_per_request": 1
+      },
+      "device_identity": "GPU-c635912b-01f2-d845-4daf-938a5e5a4136, NVIDIA L4, 580.82.07",
+      "cuda_visible_devices": "0",
+      "environment": {
+        "python": "3.13.16",
+        "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+        "dependencies": {
+          "torch": "2.13.0",
+          "transformers": "5.19.0",
+          "safetensors": "0.8.0",
+          "huggingface-hub": "2.3.0",
+          "deepspeed": null,
+          "triton": "3.7.1",
+          "vllm": "0.32.0"
+        },
+        "cuda": "13.0",
+        "nccl": [
+          2,
+          29,
+          7
+        ],
+        "gpu": [
+          "NVIDIA L4"
+        ],
+        "mini_commit": null,
+        "mini_source_sha256": "979e762b760f7023418d919203a9044c67158a89a1583582822f3d529888f4ae"
+      },
+      "vllm_version": null,
+      "options": {
+        "backend": "vllm",
+        "mode": "graph-async",
+        "capacity": 4096,
+        "host_process": null,
+        "deterministic": true,
+        "fill_uninitialized_memory": false
+      },
+      "initialization_s": 29.16452732500011
+    },
+    "vllm": {
+      "protocol": "matched-offline-v1",
+      "framework": "vllm",
+      "input_sha256": "87b975393b2ad53b402c3f93ac2d40e5963d2e446633b2640e8a7a5cbc2dce0f",
+      "model": "ibm-granite/granite-3.1-3b-a800m-instruct",
+      "revision": "a02780686e08a03fe0d2679a293b5c74a90efa89",
+      "scope": "pretokenized submission through output collection and one final decode per request",
+      "profiles": [
+        "b1-p128",
+        "b8-p128",
+        "b32-p128",
+        "b1-p2048",
+        "b8-p1024",
+        "mixed-b8"
+      ],
+      "smoke": false,
+      "repeats": 5,
+      "warmup": 3,
+      "sampling": {
+        "temperature": 0,
+        "ignore_eos": true,
+        "max_tokens": 128
+      },
+      "detokenization": {
+        "skip_special_tokens": false,
+        "clean_up_tokenization_spaces": false,
+        "calls_per_request": 1
+      },
+      "device_identity": "GPU-c635912b-01f2-d845-4daf-938a5e5a4136, NVIDIA L4, 580.82.07",
+      "cuda_visible_devices": "0",
+      "environment": {
+        "python": "3.13.16",
+        "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+        "dependencies": {
+          "torch": "2.13.0",
+          "transformers": "5.19.0",
+          "safetensors": "0.8.0",
+          "huggingface-hub": "2.3.0",
+          "deepspeed": null,
+          "triton": "3.7.1",
+          "vllm": "0.32.0"
+        },
+        "cuda": "13.0",
+        "nccl": [
+          2,
+          29,
+          7
+        ],
+        "gpu": [
+          "NVIDIA L4"
+        ],
+        "mini_commit": null,
+        "mini_source_sha256": "979e762b760f7023418d919203a9044c67158a89a1583582822f3d529888f4ae"
+      },
+      "vllm_version": "0.32.0",
+      "options": {
+        "model": "ibm-granite/granite-3.1-3b-a800m-instruct",
+        "revision": "a02780686e08a03fe0d2679a293b5c74a90efa89",
+        "tokenizer_revision": "a02780686e08a03fe0d2679a293b5c74a90efa89",
+        "dtype": "bfloat16",
+        "max_model_len": 4096,
+        "max_num_seqs": 32,
+        "gpu_memory_utilization": 0.75,
+        "enable_prefix_caching": false,
+        "enable_chunked_prefill": true,
+        "tensor_parallel_size": 1,
+        "seed": 0,
+        "disable_log_stats": true
+      },
+      "initialization_s": 71.11282099499999
+    }
+  },
+  "quality_status": "output agreement only; independent semantic quality assessment required"
+}

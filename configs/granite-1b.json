@@ -1,0 +1,21 @@
+{
+  "model": "ibm-granite/granite-3.1-1b-a400m-instruct",
+  "revision": "0da7a48b0276d500ce5922fd2b33944091fc6c09",
+  "batches": [
+    1,
+    8,
+    32
+  ],
+  "lengths": [
+    [
+      128,
+      128
+    ],
+    [
+      1024,
+      128
+    ]
+  ],
+  "repeats": 5,
+  "warmup": 1
+}

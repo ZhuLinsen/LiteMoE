@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "litemoe"
+license = {text = "Apache-2.0"}
+version = "0.1.0"
+description = "A MoE inference engine you can read in an afternoon"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.5", "transformers>=4.57.1,<5.20", "safetensors>=0.4.5", "huggingface-hub>=0.34,<3", "numpy>=1.26"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+vllm = ["vllm==0.32.0", "transformers==5.19.0", "huggingface-hub==2.3.0", "torch==2.13.0"]
+
+[project.scripts]
+litemoe = "litemoe.generate:main"
+litemoe-bench = "litemoe.cli:main"
+
+[tool.setuptools]
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+
+[tool.setuptools.packages.find]
+include = ["litemoe*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["cuda: requires CUDA", "distributed: requires torchrun"]
