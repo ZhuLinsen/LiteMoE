@@ -183,3 +183,14 @@ def test_mixed_eos_budget_and_delayed_polling(tiny):
     assert engine.state["length"][0].item() == 3
     assert metrics["output_tokens"] == sum(map(len, outputs.values()))
     assert not engine.state["active"].any()
+
+
+def test_generate_rejects_bad_input_before_any_download(monkeypatch):
+    import sys
+    from litemoe import generate
+    monkeypatch.setattr(generate.torch.cuda, "is_available", lambda: False)
+    for extra in (["--max-tokens", "0"], []):
+        monkeypatch.setattr(sys, "argv", ["litemoe", "hi", *extra])
+        with pytest.raises(SystemExit) as e:
+            generate.main()
+        assert e.value.code == 2

@@ -12,7 +12,7 @@ import statistics
 
 
 def legacy_main():
-    p = argparse.ArgumentParser(description='Legacy baseline. Matched commands: prepare, run, compare; see docs/matched-vllm-protocol.md')
+    p = argparse.ArgumentParser(description='Legacy baseline. Matched commands: prepare, run, compare; see docs/benchmark.md')
     p.add_argument('--config', required=True)
     p.add_argument('--inputs', required=True, help='Completed benchmark_layouts output directory')
     p.add_argument('--output', required=True)

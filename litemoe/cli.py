@@ -118,11 +118,11 @@ def main():
     if args.trace and (args.mode != "eager" or args.repeats != 1):
         p.error("Trace collection requires eager mode and --repeats 1 to preserve step boundaries")
     if args.backend == "fast":
-        p.error("The experimental fast adapter failed real-checkpoint numerical admission; use tools/experiment.py for gated diagnostics")
+        p.error("The experimental fast adapter failed real-checkpoint numerical admission; use --backend vllm")
     if args.backend in ("optimized", "vllm") and args.trace:
         p.error("Optimized batched Prefill does not support per-request traces; use reference")
     if args.mode != "eager" and args.backend not in ("cublas", "optimized", "vllm"):
-        p.error("Graph modes require a numerically admitted fast adapter; see docs/experiment-status.md")
+        p.error("Graph modes require --backend cublas, optimized or vllm")
     os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
     torch.use_deterministic_algorithms(True)
     torch.utils.deterministic.fill_uninitialized_memory = not args.skip_uninitialized_fill
@@ -131,7 +131,7 @@ def main():
     if args.backend in ("optimized", "vllm") and world != 1:
         p.error("Optimized execution currently requires a single GPU / EP1")
     if world > 1 and args.layout == "ep" and args.ep_combine == "partial":
-        p.error("BF16 partial EP2 failed checkpoint admission; use tools/check_ep_checkpoint.py --ep-combine partial for diagnostics")
+        p.error("BF16 partial EP2 failed checkpoint admission; use --ep-combine routes")
     if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():
         raise RuntimeError("CLI requires a CUDA GPU with native BF16 support")
     local_rank = int(os.environ.get("LOCAL_RANK", 0))
