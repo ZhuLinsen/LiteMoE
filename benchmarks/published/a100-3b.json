@@ -5,9 +5,9 @@
   "rows": [
     {
       "profile": "b1-p128",
-      "mini_tps": 277.387623176624,
-      "vllm_tps": 252.1717538742294,
-      "mini_over_vllm": 1.0999948206529546,
+      "mini_tps": 277.51462188716306,
+      "vllm_tps": 251.75385750780842,
+      "mini_over_vllm": 1.1023252022208065,
       "first_repeat_exact_requests": 1,
       "requests": 1,
       "repeat_stable": {
@@ -17,9 +17,9 @@
     },
     {
       "profile": "b8-p128",
-      "mini_tps": 1455.5310496151324,
-      "vllm_tps": 1296.8286191626355,
-      "mini_over_vllm": 1.122377335067583,
+      "mini_tps": 1456.1698906574902,
+      "vllm_tps": 1287.8690586407715,
+      "mini_over_vllm": 1.1306816332666187,
       "first_repeat_exact_requests": 8,
       "requests": 8,
       "repeat_stable": {
@@ -29,9 +29,9 @@
     },
     {
       "profile": "b32-p128",
-      "mini_tps": 5116.920266405799,
-      "vllm_tps": 4709.111454073769,
-      "mini_over_vllm": 1.0865999491218756,
+      "mini_tps": 5112.887181430971,
+      "vllm_tps": 4674.950882027587,
+      "mini_over_vllm": 1.0936771979973072,
       "first_repeat_exact_requests": 32,
       "requests": 32,
       "repeat_stable": {
@@ -41,9 +41,9 @@
     },
     {
       "profile": "b1-p2048",
-      "mini_tps": 253.8800492891054,
-      "vllm_tps": 242.95713023716226,
-      "mini_over_vllm": 1.0449582156377988,
+      "mini_tps": 254.9622089634319,
+      "vllm_tps": 241.91729282465138,
+      "mini_over_vllm": 1.0539230411619884,
       "first_repeat_exact_requests": 1,
       "requests": 1,
       "repeat_stable": {
@@ -53,9 +53,9 @@
     },
     {
       "profile": "b8-p1024",
-      "mini_tps": 1208.1291518376916,
-      "vllm_tps": 1150.0483515593799,
-      "mini_over_vllm": 1.050502920333357,
+      "mini_tps": 1207.5931153114989,
+      "vllm_tps": 1147.5574305091727,
+      "mini_over_vllm": 1.0523160612324982,
       "first_repeat_exact_requests": 8,
       "requests": 8,
       "repeat_stable": {
@@ -65,18 +65,18 @@
     },
     {
       "profile": "mixed-b8",
-      "mini_tps": 1146.1137303652904,
-      "vllm_tps": 1153.269759375198,
-      "mini_over_vllm": 0.9937950085383453,
+      "mini_tps": 1146.1430659517805,
+      "vllm_tps": 1150.7384438611898,
+      "mini_over_vllm": 0.996006583482177,
       "first_repeat_exact_requests": 6,
       "requests": 8,
       "repeat_stable": {
         "mini": true,
-        "vllm": false
+        "vllm": true
       }
     }
   ],
-  "geometric_mean_ratio": 1.0655292304389703,
+  "geometric_mean_ratio": 1.070597167117917,
   "environments": {
     "mini": {
       "protocol": "matched-offline-v1",
@@ -106,7 +106,7 @@
         "clean_up_tokenization_spaces": false,
         "calls_per_request": 1
       },
-      "device_identity": "GPU-b557c9bd-e1c0-306b-a591-b2786aecddce, NVIDIA A100-SXM4-40GB, 580.82.07",
+      "device_identity": "GPU-b2389710-094d-1631-21f7-04a2fdb85a49, NVIDIA A100-SXM4-40GB, 580.82.07",
       "cuda_visible_devices": "0",
       "environment": {
         "python": "3.13.16",
@@ -129,8 +129,8 @@
         "gpu": [
           "NVIDIA A100-SXM4-40GB"
         ],
-        "mini_commit": null,
-        "mini_source_sha256": "c062ca28b2cc5a6611d466c3077b8107d7d3968108f6b44ccf216439b56b237b"
+        "mini_commit": "78c90927ee5c38b4af8396d5bf607b177b7c9e2a",
+        "mini_source_sha256": "cb2ec5310c46c10188983ed4d18f0c8f7c96a1570030cbffe63cd94f416ff33e"
       },
       "vllm_version": null,
       "options": {
@@ -141,7 +141,7 @@
         "deterministic": true,
         "fill_uninitialized_memory": false
       },
-      "initialization_s": 8.656823902999804
+      "initialization_s": 8.414139542999692
     },
     "vllm": {
       "protocol": "matched-offline-v1",
@@ -171,7 +171,7 @@
         "clean_up_tokenization_spaces": false,
         "calls_per_request": 1
       },
-      "device_identity": "GPU-b557c9bd-e1c0-306b-a591-b2786aecddce, NVIDIA A100-SXM4-40GB, 580.82.07",
+      "device_identity": "GPU-b2389710-094d-1631-21f7-04a2fdb85a49, NVIDIA A100-SXM4-40GB, 580.82.07",
       "cuda_visible_devices": "0",
       "environment": {
         "python": "3.13.16",
@@ -194,8 +194,8 @@
         "gpu": [
           "NVIDIA A100-SXM4-40GB"
         ],
-        "mini_commit": null,
-        "mini_source_sha256": "c062ca28b2cc5a6611d466c3077b8107d7d3968108f6b44ccf216439b56b237b"
+        "mini_commit": "78c90927ee5c38b4af8396d5bf607b177b7c9e2a",
+        "mini_source_sha256": "cb2ec5310c46c10188983ed4d18f0c8f7c96a1570030cbffe63cd94f416ff33e"
       },
       "vllm_version": "0.32.0",
       "options": {
@@ -212,7 +212,7 @@
         "seed": 0,
         "disable_log_stats": true
       },
-      "initialization_s": 65.79891250800006
+      "initialization_s": 68.6687937480001
     }
   },
   "quality_status": "output agreement only; independent semantic quality assessment required"

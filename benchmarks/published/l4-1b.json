@@ -5,9 +5,9 @@
   "rows": [
     {
       "profile": "b1-p128",
-      "mini_tps": 225.07284126435508,
-      "vllm_tps": 215.0000766357542,
-      "mini_over_vllm": 1.0468500513405203,
+      "mini_tps": 225.39715837764638,
+      "vllm_tps": 217.19042128254588,
+      "mini_over_vllm": 1.037785907162196,
       "first_repeat_exact_requests": 1,
       "requests": 1,
       "repeat_stable": {
@@ -17,9 +17,9 @@
     },
     {
       "profile": "b8-p128",
-      "mini_tps": 1008.1290366731463,
-      "vllm_tps": 889.0051811074045,
-      "mini_over_vllm": 1.1339968068772706,
+      "mini_tps": 1010.0596516174824,
+      "vllm_tps": 900.2250604853721,
+      "mini_over_vllm": 1.1220079244104701,
       "first_repeat_exact_requests": 8,
       "requests": 8,
       "repeat_stable": {
@@ -29,9 +29,9 @@
     },
     {
       "profile": "b32-p128",
-      "mini_tps": 3239.5290780100304,
-      "vllm_tps": 2967.731044516742,
-      "mini_over_vllm": 1.0915844560764594,
+      "mini_tps": 3247.351023152373,
+      "vllm_tps": 3019.210040099675,
+      "mini_over_vllm": 1.0755631373844947,
       "first_repeat_exact_requests": 32,
       "requests": 32,
       "repeat_stable": {
@@ -41,9 +41,9 @@
     },
     {
       "profile": "b1-p2048",
-      "mini_tps": 193.96788576457948,
-      "vllm_tps": 188.7683033526399,
-      "mini_over_vllm": 1.0275447854305615,
+      "mini_tps": 194.5154337132009,
+      "vllm_tps": 192.1978418274675,
+      "mini_over_vllm": 1.0120583658156468,
       "first_repeat_exact_requests": 1,
       "requests": 1,
       "repeat_stable": {
@@ -53,9 +53,9 @@
     },
     {
       "profile": "b8-p1024",
-      "mini_tps": 744.9227865162071,
-      "vllm_tps": 677.9389563081694,
-      "mini_over_vllm": 1.0988051056584938,
+      "mini_tps": 748.3467478337085,
+      "vllm_tps": 691.3916462110301,
+      "mini_over_vllm": 1.0823774801659873,
       "first_repeat_exact_requests": 8,
       "requests": 8,
       "repeat_stable": {
@@ -65,9 +65,9 @@
     },
     {
       "profile": "mixed-b8",
-      "mini_tps": 708.7999217916679,
-      "vllm_tps": 696.9490009337197,
-      "mini_over_vllm": 1.017004000066104,
+      "mini_tps": 710.9414449354546,
+      "vllm_tps": 705.3632878968665,
+      "mini_over_vllm": 1.007908204373976,
       "first_repeat_exact_requests": 8,
       "requests": 8,
       "repeat_stable": {
@@ -76,7 +76,7 @@
       }
     }
   ],
-  "geometric_mean_ratio": 1.0684797368903327,
+  "geometric_mean_ratio": 1.0554981625536333,
   "environments": {
     "mini": {
       "protocol": "matched-offline-v1",
@@ -106,7 +106,7 @@
         "clean_up_tokenization_spaces": false,
         "calls_per_request": 1
       },
-      "device_identity": "GPU-c635912b-01f2-d845-4daf-938a5e5a4136, NVIDIA L4, 580.82.07",
+      "device_identity": "GPU-48ba88c1-ad2c-d968-2356-cf047d2b6b05, NVIDIA L4, 580.82.07",
       "cuda_visible_devices": "0",
       "environment": {
         "python": "3.13.16",
@@ -129,8 +129,8 @@
         "gpu": [
           "NVIDIA L4"
         ],
-        "mini_commit": null,
-        "mini_source_sha256": "979e762b760f7023418d919203a9044c67158a89a1583582822f3d529888f4ae"
+        "mini_commit": "78c90927ee5c38b4af8396d5bf607b177b7c9e2a",
+        "mini_source_sha256": "cb2ec5310c46c10188983ed4d18f0c8f7c96a1570030cbffe63cd94f416ff33e"
       },
       "vllm_version": null,
       "options": {
@@ -141,7 +141,7 @@
         "deterministic": true,
         "fill_uninitialized_memory": false
       },
-      "initialization_s": 18.7152659059999
+      "initialization_s": 6.789915285999996
     },
     "vllm": {
       "protocol": "matched-offline-v1",
@@ -171,7 +171,7 @@
         "clean_up_tokenization_spaces": false,
         "calls_per_request": 1
       },
-      "device_identity": "GPU-c635912b-01f2-d845-4daf-938a5e5a4136, NVIDIA L4, 580.82.07",
+      "device_identity": "GPU-48ba88c1-ad2c-d968-2356-cf047d2b6b05, NVIDIA L4, 580.82.07",
       "cuda_visible_devices": "0",
       "environment": {
         "python": "3.13.16",
@@ -194,8 +194,8 @@
         "gpu": [
           "NVIDIA L4"
         ],
-        "mini_commit": null,
-        "mini_source_sha256": "979e762b760f7023418d919203a9044c67158a89a1583582822f3d529888f4ae"
+        "mini_commit": "78c90927ee5c38b4af8396d5bf607b177b7c9e2a",
+        "mini_source_sha256": "cb2ec5310c46c10188983ed4d18f0c8f7c96a1570030cbffe63cd94f416ff33e"
       },
       "vllm_version": "0.32.0",
       "options": {
@@ -212,7 +212,7 @@
         "seed": 0,
         "disable_log_stats": true
       },
-      "initialization_s": 178.40843354499998
+      "initialization_s": 167.06056979799996
     }
   },
   "quality_status": "output agreement only; independent semantic quality assessment required"

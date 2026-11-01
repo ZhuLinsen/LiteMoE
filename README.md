@@ -7,7 +7,7 @@
 
 <p align="center"><b>A MoE inference engine you can read in an afternoon.</b></p>
 
-<p align="center">About 1,600 lines of Python. Up to 16% more throughput than vLLM on fixed batches.</p>
+<p align="center">About 1,600 lines of Python. 5-9% more throughput than vLLM on fixed batches.</p>
 
 ```bash
 git clone https://github.com/ZhuLinsen/LiteMoE && cd LiteMoE
@@ -19,12 +19,14 @@ litemoe "Explain mixture-of-experts in one sentence."
 
 | 12-point geomean vs vLLM 0.32.0, same session | Granite 1B | Granite 3B | Overall |
 |---|---:|---:|---:|
-| NVIDIA A100 | 109.8% | 106.6% | **108.2%** |
-| NVIDIA L4 | 106.8% | 104.9% | **105.9%** |
+| NVIDIA A100 | 110.6% | 107.1% | **108.8%** |
+| NVIDIA L4 | 105.5% | 105.0% | **105.3%** |
 
 Reproduce it on your GPU with `bash tools/reproduce.sh`.
 
-**What this does and doesn't mean:** LiteMoE calls vLLM's expert, attention and router kernels, and owns forward, KV and the generation loop. These runs use fixed batches, greedy decoding and one GPU. vLLM also runs a scheduler and a full serving stack, which LiteMoE doesn't have. [Method and known limits](docs/benchmark.md)
+**What this does and doesn't mean:** LiteMoE calls vLLM's expert, attention and router kernels, and owns forward, KV and the generation loop. These runs use fixed batches, greedy decoding and one GPU. vLLM also runs a scheduler and a full serving stack, which LiteMoE doesn't have.
+
+**Accuracy is not yet proven equal.** On 500 GSM8K problems LiteMoE scored 1-2.4 points below vLLM. That is within noise per run, but it missed the bar set in advance. [Quality results and known limits](docs/benchmark.md)
 
 ## Where the speed comes from
 
@@ -36,7 +38,8 @@ Start reading at [`litemoe/model.py`](litemoe/model.py).
 
 | | |
 |---|---|
-| **Works** | Granite 3.1 1B and 3B, one NVIDIA GPU, greedy decoding |
+| **Works** | Granite 3.1 1B (3.5 GB GPU memory) and 3B (7.5 GB), one NVIDIA GPU with BF16, greedy decoding, up to 4,096 tokens of context |
+| **Tested on** | Ubuntu 24.04, Python 3.12, CUDA 13.0, A100 and L4 |
 | **Not yet** | Other models, multi-GPU, sampling, serving, dynamic batching |
 
 Use vLLM for production. Use LiteMoE to learn how MoE inference works, or as a small base for experiments.

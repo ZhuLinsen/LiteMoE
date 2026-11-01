@@ -2,7 +2,7 @@
 
 <p align="center"><b>一个下午就能读完的 MoE 推理引擎。</b></p>
 
-<p align="center">约 1600 行 Python，固定批次下吞吐最高比 vLLM 多 16%。</p>
+<p align="center">约 1600 行 Python，固定批次下吞吐比 vLLM 高 5～9%。</p>
 
 ```bash
 git clone https://github.com/ZhuLinsen/LiteMoE && cd LiteMoE
@@ -12,14 +12,16 @@ litemoe "用一句话解释混合专家模型。"
 
 | 同场 12 点几何平均（对比 vLLM 0.32.0） | Granite 1B | Granite 3B | 总计 |
 |---|---:|---:|---:|
-| NVIDIA A100 | 109.8% | 106.6% | **108.2%** |
-| NVIDIA L4 | 106.8% | 104.9% | **105.9%** |
+| NVIDIA A100 | 110.6% | 107.1% | **108.8%** |
+| NVIDIA L4 | 105.5% | 105.0% | **105.3%** |
 
 用 `bash tools/reproduce.sh` 可以在自己的 GPU 上复现。
 
-**如何理解这个结果：** LiteMoE 调用 vLLM 的专家、Attention 和路由算子，自己负责 forward、KV 和生成循环。测试条件是固定批次、贪心解码、单 GPU。vLLM 还带调度器和完整服务，LiteMoE 没有。详见[测试方法和已知限制](docs/benchmark.md)。
+**如何理解这个结果：** LiteMoE 调用 vLLM 的专家、Attention 和路由算子，自己负责 forward、KV 和生成循环。测试条件是固定批次、贪心解码、单 GPU。vLLM 还带调度器和完整服务，LiteMoE 没有。
 
-**目前支持：** Granite 3.1 1B 和 3B，单张 NVIDIA GPU，贪心解码。
+**准确率尚未证明与 vLLM 相同：** 在 GSM8K 500 题上，LiteMoE 比 vLLM 低 1～2.4 个百分点。单次差异都在噪声范围内，但没有达到事先设定的标准。详见[质量结果和已知限制](docs/benchmark.md)。
+
+**目前支持：** Granite 3.1 1B（显存约 3.5 GB）和 3B（约 7.5 GB），单张支持 BF16 的 NVIDIA GPU，贪心解码，上下文最长 4096 token。已在 Ubuntu 24.04、Python 3.12、CUDA 13.0、A100 和 L4 上测试。
 
 **暂不支持：** 其他模型、多卡、采样、服务化、动态批处理。
 
