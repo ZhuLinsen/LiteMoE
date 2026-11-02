@@ -1,5 +1,6 @@
 """Task-level check on GSM8K: LiteMoE against vLLM and HF on the same prompts, greedy.
 
+  pip install -e '.[vllm,quality]'
   python tools/quality.py run --backend litemoe --model granite-1b --output 1b-litemoe.json
   python tools/quality.py compare 1b-litemoe.json 1b-vllm.json 1b-hf.json
 """

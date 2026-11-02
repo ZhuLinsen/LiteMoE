@@ -9,6 +9,8 @@
 
 <p align="center">About 1,600 lines of Python. 5-9% more throughput than vLLM on fixed batches.</p>
 
+<p align="center"><a href="TUTORIAL.md"><b>Tutorial: how LLM inference works</b></a> · <a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en"><b>Interactive demo</b></a></p>
+
 ```bash
 git clone https://github.com/ZhuLinsen/LiteMoE && cd LiteMoE
 pip install -e '.[vllm]'
@@ -23,6 +25,8 @@ litemoe "Explain mixture-of-experts in one sentence."
 | NVIDIA L4 | 105.5% | 105.0% | **105.3%** |
 
 Reproduce it on your GPU with `bash tools/reproduce.sh`.
+
+<a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en"><img src="visualizer/demo.en.gif" width="800" alt="One recorded request, step by step: the token going in and out, the top 5 candidates, KV cache growth and expert routing"></a>
 
 **What this does and doesn't mean:** LiteMoE calls vLLM's expert, attention and router kernels, and owns forward, KV and the generation loop. These runs use fixed batches, greedy decoding and one GPU. vLLM also runs a scheduler and a full serving stack, which LiteMoE doesn't have.
 

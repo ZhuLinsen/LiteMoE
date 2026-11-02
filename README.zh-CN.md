@@ -4,6 +4,8 @@
 
 <p align="center">约 1600 行 Python，固定批次下吞吐比 vLLM 高 5～9%。</p>
 
+<p align="center"><a href="TUTORIAL.zh-CN.md"><b>教程：看懂大模型推理</b></a> · <a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=zh"><b>交互演示</b></a></p>
+
 ```bash
 git clone https://github.com/ZhuLinsen/LiteMoE && cd LiteMoE
 pip install -e '.[vllm]'
@@ -16,6 +18,8 @@ litemoe "用一句话解释混合专家模型。"
 | NVIDIA L4 | 105.5% | 105.0% | **105.3%** |
 
 用 `bash tools/reproduce.sh` 可以在自己的 GPU 上复现。
+
+<a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=zh"><img src="visualizer/demo.zh.gif" width="800" alt="一次真实请求的逐步过程：输入和输出的 token、概率最高的 5 个候选、KV Cache 增长和专家路由"></a>
 
 **如何理解这个结果：** LiteMoE 调用 vLLM 的专家、Attention 和路由算子，自己负责 forward、KV 和生成循环。测试条件是固定批次、贪心解码、单 GPU。vLLM 还带调度器和完整服务，LiteMoE 没有。
 
