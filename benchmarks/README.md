@@ -1,10 +1,10 @@
 # Benchmark
 
-Run `bash tools/reproduce.sh`. It creates an environment, runs LiteMoE and vLLM 0.32.0 one after another on the same GPU allocation, and prints the ratios. Summaries are in [`benchmarks/published`](../benchmarks/published).
+Run `bash tools/reproduce.sh`. It creates an environment, runs LiteMoE and vLLM 0.32.0 one after another on the same GPU allocation, and prints the ratios. Summaries are in [`published`](published).
 
 ## Setup
 
-- Inputs: 12 frozen points in `benchmarks/`, six each for Granite 3.1 1B and 3B.
+- Inputs: 12 frozen points in this directory, six each for Granite 3.1 1B and 3B.
 - Profiles: batch 1, 8 and 32 with 128-token prompts; batch 1 with 2,048; batch 8 with 1,024; and a mixed batch of 32 to 2,048.
 - Output: 128 tokens per request, greedy, ignoring EOS, BF16.
 - Timing: 3 warmups and 5 measured repeats per point, median end-to-end throughput.
@@ -21,7 +21,7 @@ Run `bash tools/reproduce.sh`. It creates an environment, runs LiteMoE and vLLM 
 | mixed-b8 | 100.7% | 99.6% | 100.8% | 100.2% |
 | **Geomean** | **110.6%** | **107.1%** | **105.5%** | **105.0%** |
 
-Measured at commit `78c9092`, source digest `cb2ec5310c46c101`, from a fresh clone and install. Per-repeat timings are in [`benchmarks/published/raw`](../benchmarks/published/raw), with output tokens replaced by a hash. Each card was measured once on these numbers. Ratios moved by up to about 3 points between runs on the same card, and repeat runs put A100 at 108.2-108.8% and L4 at 105.3-105.9%.
+Measured at commit `78c9092`, source digest `cb2ec5310c46c101`, from a fresh clone and install. Benchmark tools were later trimmed without changing `litemoe/`. Per-repeat timings are in [`published/raw`](published/raw), with output tokens replaced by a hash. Each card was measured once on these numbers. Ratios moved by up to about 3 points between runs on the same card, and repeat runs put A100 at 108.2-108.8% and L4 at 105.2-105.9%.
 
 Tested on Ubuntu 24.04, Python 3.12.3, NVIDIA driver 580.82.07, CUDA 13.0, torch 2.13.0. `litemoe` peaked near 3.5 GB of GPU memory on 1B and 7.5 GB on 3B, with a context limit of 4,096 tokens.
 
@@ -50,7 +50,7 @@ The earlier 500-problem runs were too small to clear the bar, missing it in 6 of
 
 Granite 1B and L4 have not had a full-set run. Scores on the same problems also moved between runs on one card: the first 500 on A100 3B scored 47.6% and then 48.0% for LiteMoE, 50.0% and then 49.0% for vLLM. GSM8K measures one kind of task.
 
-Across 500 problems per run there were no empty outputs, tokens after EOS or budget overruns, and repeating one batch gave identical LiteMoE output. Per-problem results are in [`quality-gsm8k.json`](../benchmarks/published/quality-gsm8k.json).
+Across 500 problems per run there were no empty outputs, tokens after EOS or budget overruns, and repeating one batch gave identical LiteMoE output. Per-problem results are in [`quality-gsm8k.json`](published/quality-gsm8k.json).
 
 ## Known limits
 

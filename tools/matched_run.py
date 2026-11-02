@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import re
+import signal
 from pathlib import Path
 import subprocess
 import sys
@@ -12,7 +13,35 @@ import zipfile
 
 if __name__ == '__main__' and not __package__:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from tools.process_guard import stop
+
+
+def stop(proc):
+    if proc.poll() is None:
+        if os.name == 'posix':
+            # The existing runner launches stages in separate process sessions.
+            # Kill their descendants too; killing only the runner group leaks them.
+            parents = {}
+            for path in Path('/proc').glob('[0-9]*/stat'):
+                try:
+                    fields = path.read_text().rsplit(')', 1)[1].split()
+                    parents[int(path.parent.name)] = int(fields[1])
+                except (OSError, ValueError, IndexError):
+                    continue
+            victims = {proc.pid}
+            while True:
+                expanded = victims | {pid for pid, parent in parents.items() if parent in victims}
+                if expanded == victims:
+                    break
+                victims = expanded
+            for pid in victims - {proc.pid}:
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            os.killpg(proc.pid, signal.SIGKILL)
+        else:
+            proc.kill()
+        proc.wait(timeout=15)
 
 
 def main():
@@ -50,7 +79,7 @@ def main():
 
     def archive():
         (out/'progress.json').write_text(json.dumps(stages, indent=2))
-        entries = [p for folder in ('litemoe','tools','tests','configs','docs','LICENSES',str(out))
+        entries = [p for folder in ('litemoe','tools','tests',str(out))
                    for p in Path(folder).rglob('*') if p.is_file() and '__pycache__' not in p.parts]
         entries += list(Path(args.inputs).glob('*.json')) + [Path('pyproject.toml'),Path('THIRD_PARTY_NOTICES.md')]
         target = out.parent/(out.name+'-latest.zip')

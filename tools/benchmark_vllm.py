@@ -10,68 +10,17 @@ import hashlib
 import math
 import statistics
 
+from litemoe.engine import Request
 
-def legacy_main():
-    p = argparse.ArgumentParser(description='Legacy baseline. Matched commands: prepare, run, compare; see docs/benchmark.md')
-    p.add_argument('--config', required=True)
-    p.add_argument('--inputs', required=True, help='Completed benchmark_layouts output directory')
-    p.add_argument('--output', required=True)
-    p.add_argument('--eager', action='store_true')
-    args = p.parse_args()
-    os.environ.setdefault('VLLM_WORKER_MULTIPROC_METHOD', 'spawn')
-    os.environ.setdefault('VLLM_NO_USAGE_STATS', '1')
-    os.environ['PATH'] = str(Path(sys.executable).parent) + os.pathsep + os.environ.get('PATH', '')
-    cfg = json.loads(Path(args.config).read_text())
-    name = Path(args.config).stem.removeprefix('granite-')
-    out = Path(args.output)
-    out.mkdir(parents=True, exist_ok=False)
-    import torch
-    from vllm import LLM, SamplingParams
-    options = dict(model=cfg['model'], revision=cfg['revision'], dtype='bfloat16',
-                   max_model_len=2048, max_num_seqs=32, gpu_memory_utilization=.35,
-                   enable_prefix_caching=False, enable_chunked_prefill=True,
-                   tensor_parallel_size=1, enforce_eager=args.eager, seed=0, moe_backend='triton')
-    if not args.eager:
-        options['compilation_config'] = dict(cudagraph_capture_sizes=[1, 8, 32])
-    metadata = dict(options=options, versions={p: importlib.metadata.version(p) for p in
-        ('vllm', 'torch', 'transformers', 'huggingface-hub', 'flashinfer-python')},
-        cuda=torch.version.cuda, gpu=torch.cuda.get_device_name(), warmup=1, repeats=5,
-        scope='wall time of offline LLM.generate including scheduler and detokenization; initialization excluded',
-        numerical_contract='vLLM native BF16 kernels; output agreement recorded, not assumed to pass mini HF tolerance',
-        reference_scope='mini engine E2E excludes final output-dictionary collection; compare with this scope caveat')
-    (out / 'environment.json').write_text(json.dumps(metadata, indent=2))
-    llm = LLM(**options)
-    sampling = SamplingParams(temperature=0, max_tokens=128, ignore_eos=True, seed=0)
-    for length in (128, 1024):
-        for batch in (1, 8, 32):
-            inp = Path(args.inputs) / f'input-{name}-b{batch}-p{length}.json'
-            if not inp.exists():
-                continue
-            requests = json.loads(inp.read_text())
-            prompts = [dict(prompt_token_ids=r['prompt']) for r in requests]
-            ref = Path(args.inputs) / f'{name}-b{batch}-p{length}-ep1-async.jsonl'
-            expected = json.loads(ref.read_text().splitlines()[0])['outputs'] if ref.exists() else None
-            first = None
-            for repeat in range(-1, 5):
-                start = time.perf_counter()
-                result = llm.generate(prompts, sampling, use_tqdm=False)
-                elapsed = time.perf_counter() - start
-                outputs = {r['request_id']: list(o.outputs[0].token_ids) for r, o in zip(requests, result)}
-                if len(result) != len(requests) or any(len(v) != 128 for v in outputs.values()):
-                    raise ValueError('Incomplete fixed-budget vLLM output')
-                if first is None:
-                    first = outputs
-                row = dict(batch=batch, prompt_length=length, output_length=128, repeat=repeat,
-                           elapsed_s=elapsed, e2e_tps=sum(map(len, outputs.values())) / elapsed,
-                           repeat_equal=outputs == first, mini_equal=outputs == expected if expected else None,
-                           outputs=outputs, texts={r['request_id']: o.outputs[0].text for r, o in zip(requests, result)})
-                with (out / 'results.jsonl').open('a') as f:
-                    f.write(json.dumps(row) + '\n')
-                print('VLLM_BENCH', batch, length, repeat, round(row['e2e_tps'], 3),
-                      'repeat_equal', row['repeat_equal'], 'mini_equal', row['mini_equal'], flush=True)
-                if not row['repeat_equal']:
-                    raise ValueError('vLLM repeated generation changed outputs')
-    print('VLLM_COMPLETE', flush=True)
+
+TEXTS = [
+    "Explain how a computer stores information in memory. Use a concrete example and describe why locality matters. ",
+    "A city plans a new public park with trees, footpaths, a pond and a small library. Discuss the design tradeoffs. ",
+    "Describe the water cycle, including evaporation, condensation and precipitation, for a curious student. ",
+    "Write a short Python function that computes a running average. Explain its time and space complexity. ",
+    "Compare expert parallelism and data parallelism in neural network inference. Discuss communication and memory. ",
+    "How can a scientific experiment distinguish a useful optimization from random variation? Explain controls and measurement. ",
+]
 
 
 PROTOCOL = 'matched-offline-v1'
@@ -79,6 +28,17 @@ MATRIX = {'b1-p128': [128], 'b8-p128': [128] * 8, 'b32-p128': [128] * 32,
           'b1-p2048': [2048], 'b8-p1024': [1024] * 8,
           'mixed-b8': [32, 32, 64, 128, 256, 512, 1024, 2048]}
 SCOPE = 'pretokenized submission through output collection and one final decode per request'
+
+
+def workload(tokenizer, batch, prompt_length, output_length, split="eval"):
+    texts = TEXTS[:2] if split == "calibration" else TEXTS[2:]
+    requests = []
+    for i in range(batch):
+        text = texts[i % len(texts)]
+        tokens = tokenizer.encode(text * (prompt_length // 8 + 2), add_special_tokens=False)[:prompt_length]
+        assert len(tokens) == prompt_length
+        requests.append(Request(f"{split}-{i}", tokens, output_length))
+    return requests
 
 
 def save(path, value):
@@ -125,7 +85,6 @@ def timed_generation(generate, tokenizer, synchronize, clock=time.perf_counter):
 
 def prepare_matched(args):
     from transformers import AutoTokenizer
-    from tools.experiment import workload
     cfg = json.loads(Path(args.config).read_text(encoding='utf-8'))
     tokenizer = AutoTokenizer.from_pretrained(cfg['model'], revision=cfg['revision'])
     cases = {}
@@ -301,9 +260,7 @@ def compare_matched(args):
 
 
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] not in ('prepare', 'run', 'compare'):
-        return legacy_main()
-    p = argparse.ArgumentParser(description='Matched Mini/vLLM offline benchmark; legacy flags remain supported')
+    p = argparse.ArgumentParser(description='Matched LiteMoE/vLLM offline benchmark')
     sub = p.add_subparsers(dest='action', required=True)
     prepare = sub.add_parser('prepare')
     prepare.add_argument('--config', required=True)
