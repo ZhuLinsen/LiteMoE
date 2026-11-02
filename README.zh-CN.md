@@ -4,6 +4,8 @@
 
 <p align="center">约 1600 行 Python，固定批次下吞吐比 vLLM 高 5～9%。</p>
 
+<p align="center"><a href="README.md">English</a> · <b>简体中文</b></p>
+
 <p align="center"><a href="TUTORIAL.zh-CN.md"><b>教程：看懂大模型推理</b></a> · <a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=zh"><b>交互演示</b></a></p>
 
 ```bash
