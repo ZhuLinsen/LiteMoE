@@ -21,7 +21,7 @@ Run `bash tools/reproduce.sh`. It creates an environment, runs LiteMoE and vLLM 
 | mixed-b8 | 100.7% | 99.6% | 100.8% | 100.2% |
 | **Geomean** | **110.6%** | **107.1%** | **105.5%** | **105.0%** |
 
-Measured at commit `78c9092`, source digest `cb2ec5310c46c101`, from a fresh clone and install. Benchmark tools were later trimmed without changing `litemoe/`. Per-repeat timings are in [`published/raw`](published/raw), with output tokens replaced by a hash. Each card was measured once on these numbers. Ratios moved by up to about 3 points between runs on the same card, and repeat runs put A100 at 108.2-108.8% and L4 at 105.2-105.9%.
+Measured at commit `78c9092`, source digest `cb2ec5310c46c101`, from a fresh clone and install. Benchmark tools were later trimmed without changing `litemoe/`. Per-repeat timings are in [`published/raw`](published/raw), with output tokens replaced by a hash. Each card was measured once on these numbers. Ratios moved by up to about 5 points between runs on the same card, and repeat runs put A100 at 108.2-108.8% and L4 at 105.2-105.9%.
 
 Tested on Ubuntu 24.04, Python 3.12.3, NVIDIA driver 580.82.07, CUDA 13.0, torch 2.13.0. `litemoe` peaked near 3.5 GB of GPU memory on 1B and 7.5 GB on 3B, with a context limit of 4,096 tokens.
 
