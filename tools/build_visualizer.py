@@ -1,4 +1,4 @@
-"""Put a recording into visualizer/index.html and render the README GIFs.
+"""Put a recording into docs/visualizer/index.html and render the README GIFs.
 
   python tools/build_visualizer.py inference.json --fast-text "answer printed by the litemoe command"
   python tools/build_visualizer.py --gif          # needs playwright, Chromium and ffmpeg
@@ -10,7 +10,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-PAGE = Path(__file__).resolve().parent.parent / "visualizer" / "index.html"
+PAGE = Path(__file__).resolve().parent.parent / "docs" / "visualizer" / "index.html"
 # The GIF keeps the parts that change each step, at a width a README shows without scaling.
 GIF_CSS = """header, #controls .bar, #explain, #tokHint, #compare, footer, #kvnote, #routeNote, .tok.fold { display: none !important; }
 body { padding: 10px; } main { gap: 8px; } .panel { padding: 10px; gap: 6px; } .stack { gap: 8px; } .grid3 { gap: 8px; }"""
