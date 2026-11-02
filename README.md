@@ -9,6 +9,8 @@
 
 <p align="center">About 1,600 lines of Python. 5-9% more throughput than vLLM on fixed batches.</p>
 
+<p align="center"><b>English</b> · <a href="README.zh-CN.md">简体中文</a></p>
+
 <p align="center"><a href="TUTORIAL.md"><b>Tutorial: how LLM inference works</b></a> · <a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en"><b>Interactive demo</b></a></p>
 
 ```bash
