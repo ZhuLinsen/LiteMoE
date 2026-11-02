@@ -1,6 +1,6 @@
 # 从 prompt 到 token：看懂大模型推理
 
-[English](TUTORIAL.md)
+[English](TUTORIAL.md) · **[交互演示](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=zh)**
 
 这份教程沿着一次真实请求，讲清大模型推理在做什么：Prefill、Decode、KV Cache、Attention、RoPE、RMSNorm、MoE，以及它们为什么快或慢。最后讲 DeepSeek、Kimi、Qwen 等最新模型改了什么。
 

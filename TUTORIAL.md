@@ -1,6 +1,6 @@
 # From prompt to token: how LLM inference works
 
-[中文](TUTORIAL.zh-CN.md)
+[中文](TUTORIAL.zh-CN.md) · **[Interactive demo](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en)**
 
 This tutorial follows one real request to explain what LLM inference does: prefill, decode, the KV cache, attention, RoPE, RMSNorm and MoE, and why each is fast or slow. It ends with what the latest models from DeepSeek, Kimi, Qwen and others changed.
 
