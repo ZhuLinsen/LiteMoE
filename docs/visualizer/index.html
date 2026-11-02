@@ -271,7 +271,7 @@ function renderStatic() {
   document.querySelectorAll("[data-t]").forEach(e => { e.textContent = L[e.dataset.t]; });
   $("langZh").setAttribute("aria-pressed", lang === "zh");
   $("langEn").setAttribute("aria-pressed", lang === "en");
-  $("tutorial").href = "https://github.com/ZhuLinsen/LiteMoE/blob/main/" + (lang === "zh" ? "TUTORIAL.zh-CN.md" : "TUTORIAL.md");
+  $("tutorial").href = "https://github.com/ZhuLinsen/LiteMoE/blob/main/docs/" + (lang === "zh" ? "tutorial.zh-CN.md" : "tutorial.md");
   $("meta").textContent = L.meta;
   $("range").setAttribute("aria-label", L.timeline);
   $("kvc").setAttribute("aria-label", "KV Cache");

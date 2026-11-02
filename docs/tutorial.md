@@ -1,10 +1,10 @@
 # From prompt to token: how LLM inference works
 
-[中文](TUTORIAL.zh-CN.md) · **[Interactive demo](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en)**
+[中文](tutorial.zh-CN.md) · **[Interactive demo](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en)**
 
 This tutorial follows one real request to explain what LLM inference does: prefill, decode, the KV cache, attention, RoPE, RMSNorm and MoE, and why each is fast or slow. It ends with what the latest models from DeepSeek, Kimi, Qwen and others changed.
 
-You need some Python and to know what matrix multiplication is. All code comes from [`litemoe/`](litemoe), and the example model is Granite 3.1 1B.
+You need some Python and to know what matrix multiplication is. All code comes from [`litemoe/`](../litemoe), and the example model is Granite 3.1 1B.
 
 **What it won't teach you:** training, sampling, scheduling, quantization and multi-GPU. LiteMoE has none of these, and its high-performance kernels come from vLLM. Section 11 lists where to go next.
 
@@ -34,7 +34,7 @@ text → chat template → token ids
      → token ids → text
 ```
 
-The entry point is [`generate.py`](litemoe/generate.py). It's only about 40 lines, so read it first.
+The entry point is [`generate.py`](../litemoe/generate.py). It's only about 40 lines, so read it first.
 
 Below is a recording of a real request: the candidate tokens at each step, the KV cache growing, and the experts the current token picks in each layer. In the [interactive version](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en) you can step through the run and click any token.
 
@@ -89,7 +89,7 @@ Each decode step is the code below. Understand this first and leave the details 
 
 ### How big is the KV cache?
 
-[`cache.py`](litemoe/cache.py) holds one large preallocated tensor:
+[`cache.py`](../litemoe/cache.py) holds one large preallocated tensor:
 
 ```python
 # litemoe/cache.py
@@ -110,7 +110,7 @@ That's a small 1B model. With a million tokens of context and a much bigger mode
 
 ## 4. One Transformer layer: RMSNorm and residuals
 
-Each layer's structure is in `forward` in [`model.py`](litemoe/model.py). Without the optimization branches, it looks like this:
+Each layer's structure is in `forward` in [`model.py`](../litemoe/model.py). Without the optimization branches, it looks like this:
 
 ```text
 z = RMSNorm(x)
@@ -253,7 +253,7 @@ In our measurements, expert computation is the largest part of decode, at about 
 
 Handling several requests at once uses the GPU better. This is batching. But requests differ in length and finish at different times, which causes two problems.
 
-**Padding.** Prompts vary in length. The traditional approach pads them to match and masks the padding, which wastes more as long requests increase. LiteMoE's fast path concatenates all tokens into one long sequence and uses each sequence's boundaries for attention. See [`packed.py`](litemoe/packed.py).
+**Padding.** Prompts vary in length. The traditional approach pads them to match and masks the padding, which wastes more as long requests increase. LiteMoE's fast path concatenates all tokens into one long sequence and uses each sequence's boundaries for attention. See [`packed.py`](../litemoe/packed.py).
 
 **Some requests finish first.** Each request has its own `active` state. Finished positions stay in the batch, but they no longer write to the KV cache and their output is never published. LiteMoE uses the simplest fixed batch: the whole batch runs before anything returns, and new requests can't join midway. An online service needs **continuous batching**, which is what the scheduler in frameworks like vLLM does. LiteMoE doesn't have one.
 
@@ -267,7 +267,7 @@ LiteMoE uses the same expert, attention and routing kernels as vLLM, yet deliver
 
 ### CUDA Graph: record one step and replay it
 
-In normal execution, the CPU launches dozens of GPU operations one by one in every step, and each has overhead. [`execution.py`](litemoe/execution.py) records a whole decode step as a graph, so later steps only "replay" it:
+In normal execution, the CPU launches dozens of GPU operations one by one in every step, and each has overhead. [`execution.py`](../litemoe/execution.py) records a whole decode step as a graph, so later steps only "replay" it:
 
 ```python
 # litemoe/execution.py
@@ -339,7 +339,7 @@ This section may matter more than all the others. Many performance numbers can't
 - **Running and being correct are different things.** A program can pass every test while its accuracy quietly drops.
 - **No difference found doesn't prove equality.** Sample size decides how small a gap you can see.
 
-The full data is in [`benchmarks/README.md`](benchmarks/README.md), and `bash tools/reproduce.sh` lets you reproduce it.
+The full data is in [`benchmarks/README.md`](../benchmarks/README.md), and `bash tools/reproduce.sh` lets you reproduce it.
 
 ## 10. What the latest models changed
 

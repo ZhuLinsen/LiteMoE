@@ -1,10 +1,10 @@
 # 从 prompt 到 token：看懂大模型推理
 
-[English](TUTORIAL.md) · **[交互演示](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=zh)**
+[English](tutorial.md) · **[交互演示](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=zh)**
 
 这份教程沿着一次真实请求，讲清大模型推理在做什么：Prefill、Decode、KV Cache、Attention、RoPE、RMSNorm、MoE，以及它们为什么快或慢。最后讲 DeepSeek、Kimi、Qwen 等最新模型改了什么。
 
-你只需要会一点 Python，知道矩阵乘法是什么。文中的代码都摘自 [`litemoe/`](litemoe)，示例模型是 Granite 3.1 1B。
+你只需要会一点 Python，知道矩阵乘法是什么。文中的代码都摘自 [`litemoe/`](../litemoe)，示例模型是 Granite 3.1 1B。
 
 **它不能教你的：** 训练、采样、调度、量化、多卡。LiteMoE 没有这些，高性能算子也是调用 vLLM 的。第 11 节列出了接着看什么。
 
@@ -34,7 +34,7 @@
      → token id → 文本
 ```
 
-入口在 [`generate.py`](litemoe/generate.py)，只有 40 多行，建议先读它。
+入口在 [`generate.py`](../litemoe/generate.py)，只有 40 多行，建议先读它。
 
 下面是一次真实请求的录制：每一步的候选 token、KV Cache 增长，以及当前 token 在每层选了哪些专家。在[交互版](https://zhulinsen.github.io/LiteMoE/visualizer/?lang=zh)里可以逐步查看，也能点开任意 token。
 
@@ -89,7 +89,7 @@
 
 ### KV Cache 有多大
 
-[`cache.py`](litemoe/cache.py) 里只有一个预先分配好的大张量：
+[`cache.py`](../litemoe/cache.py) 里只有一个预先分配好的大张量：
 
 ```python
 # litemoe/cache.py
@@ -110,7 +110,7 @@
 
 ## 4. 一层 Transformer：RMSNorm 和残差
 
-每层的结构在 [`model.py`](litemoe/model.py) 的 `forward` 里。去掉优化分支后是这样：
+每层的结构在 [`model.py`](../litemoe/model.py) 的 `forward` 里。去掉优化分支后是这样：
 
 ```text
 z = RMSNorm(x)
@@ -253,7 +253,7 @@ print(top.softmax(-1))                          # 每行的权重之和为 1
 
 同时处理多个请求，GPU 利用率更高，这叫组批（batch）。但请求的长度和结束时间都不同，会带来两个问题。
 
-**Padding。** Prompt 长短不一，传统做法是补齐后用掩码忽略补位，长请求越多，浪费越大。LiteMoE 的快路径把所有 token 拼成一个长序列，再用每个序列的边界做注意力，见 [`packed.py`](litemoe/packed.py)。
+**Padding。** Prompt 长短不一，传统做法是补齐后用掩码忽略补位，长请求越多，浪费越大。LiteMoE 的快路径把所有 token 拼成一个长序列，再用每个序列的边界做注意力，见 [`packed.py`](../litemoe/packed.py)。
 
 **有人先结束。** 每个请求的 `active` 状态单独记录。已结束的位置还留在批次里，但不再写入 KV，输出也不会发布。这里 LiteMoE 用的是最简单的固定批次：跑完这批才返回，不能中途加入新请求。线上服务要用**连续批处理**，这是 vLLM 这类框架的调度器做的事，LiteMoE 没有。
 
@@ -267,7 +267,7 @@ LiteMoE 和 vLLM 用的是同样的专家、注意力和路由算子，但固定
 
 ### CUDA Graph：把一步录下来重放
 
-普通执行时，CPU 每一步都要逐个发起几十个 GPU 操作，这些都有开销。[`execution.py`](litemoe/execution.py) 把整个 Decode 步骤录制成一张图，之后每步只需要“重放”：
+普通执行时，CPU 每一步都要逐个发起几十个 GPU 操作，这些都有开销。[`execution.py`](../litemoe/execution.py) 把整个 Decode 步骤录制成一张图，之后每步只需要“重放”：
 
 ```python
 # litemoe/execution.py
@@ -339,7 +339,7 @@ LiteMoE 和 vLLM 用的是同样的专家、注意力和路由算子，但固定
 - **“能跑”和“质量对”是两回事。** 程序通过所有测试，准确率也可能悄悄下降。
 - **没有差异不等于证明相同。** 样本量决定你能看到多小的差距。
 
-完整数据在 [`benchmarks/README.md`](benchmarks/README.md)，运行 `bash tools/reproduce.sh` 可以自己复现。
+完整数据在 [`benchmarks/README.md`](../benchmarks/README.md)，运行 `bash tools/reproduce.sh` 可以自己复现。
 
 ## 10. 最新模型改了什么
 

@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
-    <img src="assets/logo.svg" width="360" alt="LiteMoE">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-dark.svg">
+    <img src="docs/assets/logo.svg" width="360" alt="LiteMoE">
   </picture>
 </p>
 
@@ -11,7 +11,7 @@
 
 <p align="center"><b>English</b> · <a href="README.zh-CN.md">简体中文</a></p>
 
-<p align="center"><a href="TUTORIAL.md"><b>Tutorial: how LLM inference works</b></a> · <a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en"><b>Interactive demo</b></a></p>
+<p align="center"><a href="docs/tutorial.md"><b>Tutorial: how LLM inference works</b></a> · <a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en"><b>Interactive demo</b></a></p>
 
 ```bash
 git clone https://github.com/ZhuLinsen/LiteMoE && cd LiteMoE
@@ -28,7 +28,7 @@ litemoe "Explain mixture-of-experts in one sentence."
 
 Reproduce it on your GPU with `bash tools/reproduce.sh`.
 
-<a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en"><img src="visualizer/demo.en.gif" width="800" alt="One recorded request, step by step: the token going in and out, the top 5 candidates, KV cache growth and expert routing"></a>
+<a href="https://zhulinsen.github.io/LiteMoE/visualizer/?lang=en"><img src="docs/visualizer/demo.en.gif" width="800" alt="One recorded request, step by step: the token going in and out, the top 5 candidates, KV cache growth and expert routing"></a>
 
 **What this does and doesn't mean:** LiteMoE calls vLLM's expert, attention and router kernels, and owns forward, KV and the generation loop. These runs use fixed batches, greedy decoding and one GPU. vLLM also runs a scheduler and a full serving stack, which LiteMoE doesn't have.
 
