@@ -29,6 +29,11 @@ p { margin: 0; }
 a { color: inherit; }
 .link { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); font-size: 14px; text-decoration: none; }
 .link:hover { border-color: var(--ink); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.seg button { border: 0; border-radius: 0; padding: 5px 12px; font-size: 14px; background: var(--panel); color: var(--muted); line-height: inherit; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); font-weight: 700; }
 .muted { color: var(--muted); font-size: 13px; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
 .bar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
@@ -93,7 +98,10 @@ footer { font-size: 12.5px; color: var(--muted); max-width: 90ch; }
     <div class="bar split">
       <h1 data-t="title"></h1>
       <div class="bar">
-        <button id="lang" type="button"></button>
+        <div class="seg" role="group" aria-label="Language / 语言">
+          <button id="langZh" type="button">中文</button>
+          <button id="langEn" type="button">English</button>
+        </div>
         <a id="tutorial" class="link" href=""><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z"></path></svg><span data-t="tutorial"></span></a>
         <a class="link" href="https://github.com/ZhuLinsen/LiteMoE"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg><span>GitHub</span></a>
       </div>
@@ -178,7 +186,7 @@ const all = D.prompt.concat(D.output);
 
 const TEXT = {
   zh: {
-    title: "一次大模型推理的过程", tutorial: "教程", other: "English", play: "播放", pause: "暂停", prev: "上一步", next: "下一步", timeline: "时间线",
+    title: "一次大模型推理的过程", tutorial: "教程", play: "播放", pause: "暂停", prev: "上一步", next: "下一步", timeline: "时间线",
     meta: `真实录制：“${D.user_prompt}” · ${D.model.split("/")[1]} · ${C.layers} 层 · 每层 ${C.experts} 个专家选 ${C.experts_per_token} 个`,
     step: (a, b) => `第 ${a} / ${b} 步`, fedIn: "本步输入", cameOut: "本步输出", tokenCount: n => `${n} 个 token`,
     modelLabel: "模型读取 KV Cache", history: n => `${n} 个历史 token`, noHistory: "空的，从零开始",
@@ -195,7 +203,7 @@ const TEXT = {
     foot: `以上都是真实数据：${D.model}（revision ${D.revision.slice(0, 7)}），NVIDIA L4，BF16，贪心解码。路由和概率由 tools/record_inference.py 在参考路径上录制，默认快路径不能逐步记录。Prompt 里的日期由聊天模板自动加入。`,
   },
   en: {
-    title: "One LLM inference, step by step", tutorial: "Tutorial", other: "中文", play: "Play", pause: "Pause", prev: "Back", next: "Next", timeline: "Timeline",
+    title: "One LLM inference, step by step", tutorial: "Tutorial", play: "Play", pause: "Pause", prev: "Back", next: "Next", timeline: "Timeline",
     meta: `Recorded run: “${D.user_prompt}” · ${D.model.split("/")[1]} · ${C.layers} layers · ${C.experts_per_token} of ${C.experts} experts per layer`,
     step: (a, b) => `Step ${a} of ${b}`, fedIn: "Goes in", cameOut: "Comes out", tokenCount: n => `${n} tokens`,
     modelLabel: "Model reads the KV cache", history: n => `${n} past tokens`, noHistory: "empty, starting fresh",
@@ -261,7 +269,8 @@ function renderStatic() {
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
   document.title = L.title;
   document.querySelectorAll("[data-t]").forEach(e => { e.textContent = L[e.dataset.t]; });
-  $("lang").textContent = L.other;
+  $("langZh").setAttribute("aria-pressed", lang === "zh");
+  $("langEn").setAttribute("aria-pressed", lang === "en");
   $("tutorial").href = "https://github.com/ZhuLinsen/LiteMoE/blob/main/" + (lang === "zh" ? "TUTORIAL.zh-CN.md" : "TUTORIAL.md");
   $("meta").textContent = L.meta;
   $("range").setAttribute("aria-label", L.timeline);
@@ -345,7 +354,9 @@ $("play").onclick = () => {
 $("prev").onclick = () => { stop(); go(frame - 1); };
 $("next").onclick = () => { stop(); go(frame + 1); };
 $("range").oninput = e => { stop(); go(+e.target.value); };
-$("lang").onclick = () => { lang = lang === "zh" ? "en" : "zh"; L = TEXT[lang]; renderStatic(); render(); };
+const setLang = next => { lang = next; L = TEXT[lang]; renderStatic(); render(); };
+$("langZh").onclick = () => setLang("zh");
+$("langEn").onclick = () => setLang("en");
 addEventListener("keydown", e => {
   if (e.target.tagName === "INPUT") return;
   if (e.key === "ArrowRight") { stop(); go(frame + 1); }
