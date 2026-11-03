@@ -53,3 +53,7 @@ Use vLLM for production. Use LiteMoE to learn how MoE inference works, or as a s
 ## License
 
 [Apache-2.0](LICENSE). Not affiliated with vLLM, IBM or DeepSeek. [Third-party notices](THIRD_PARTY_NOTICES.md)
+
+## Community
+
+Thanks to the [LINUX DO](https://linux.do/) community.
