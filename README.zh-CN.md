@@ -34,3 +34,7 @@ litemoe "用一句话解释混合专家模型。"
 生产环境请用 vLLM。LiteMoE 适合学习 MoE 推理，或作为实验的小型基础。
 
 [Apache-2.0](LICENSE)
+
+## 友情链接
+
+感谢 [LINUX DO](https://linux.do/) 社区的支持。
